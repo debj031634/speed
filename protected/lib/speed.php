@@ -246,12 +246,13 @@ class Model{
 		return $this->execute("DELETE FROM ".$this->table_name.$conditions["_where"], $conditions["_bindParams"]);
 	}
 	
-	public function create($row){
+	public function create($row,$ignore = false){
 		$values = array();
 		foreach($row as $k=>$v){
 			$keys[] = "`{$k}`"; $values[":".$k] = $v; $marks[] = ":".$k;
 		}
-		$this->execute("INSERT INTO ".$this->table_name." (".implode(', ', $keys).") VALUES (".implode(', ', $marks).")", $values);
+		$ig = $ignore == true ? "IGNORE":"";
+		$this->execute("INSERT  ".$ig."  INTO ".$this->table_name." (".implode(', ', $keys).") VALUES (".implode(', ', $marks).")", $values);
 		return $this->dbInstance($GLOBALS['mysql'], 'master')->lastInsertId();
 	}
 	
